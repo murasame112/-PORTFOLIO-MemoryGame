@@ -12,15 +12,18 @@ namespace MemoryGame
 
             dl.numberOfWords = 4;
             dl.chances = 10;
+            dl.currentChances = dl.chances;
+            dl.level = "Easy";
 
             string filePath = "../../../Words.txt";
 
             gm.SaveWords(filePath);
-            //gm.ChooseDifficulty();
+            //dl = gm.ChooseDifficulty();
             
             gm.RandomizeXWords(dl);
             gm.ShowWords();
-
+            gm.CreateMatrix(dl);
+            gm.GameCourse();
         }
     }
 }

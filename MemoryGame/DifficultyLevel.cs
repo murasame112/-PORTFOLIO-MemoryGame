@@ -10,5 +10,7 @@ namespace MemoryGame
     {
         public int numberOfWords { get; set; }
         public int chances { get; set; }
+        public string level { get; set; }
+        public int currentChances { get; set; }
     }
 }

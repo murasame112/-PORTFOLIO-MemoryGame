@@ -11,7 +11,8 @@ namespace MemoryGame
 
         private string[] randomizedWords { get; set; }
         private string[] words { get; set; }
-        
+        private string[] bWords { get; set; }
+        private string[] matrixNumbers { get; set; }
         public void SaveWords(string filePath)
         {
             this.words = System.IO.File.ReadAllLines(@filePath);
@@ -74,21 +75,108 @@ namespace MemoryGame
                 case 1:
                     difficulty.numberOfWords = 4;
                     difficulty.chances = 10;
+                    difficulty.level = "Easy";
+                    
                     break;
                 case 2:
                     difficulty.numberOfWords = 8;
                     difficulty.chances = 15;
+                    difficulty.level = "Hard";
                     break;
 
             }
-
+            difficulty.currentChances = difficulty.chances;
             return difficulty;
         }
 
-        public void GenerateMatrix()
+        public string[] RandomizeRandomizedWords(string[] randWords)
         {
+            Random rand = new Random();
 
+            for(int i = 0; i < this.randomizedWords.Length; i++)
+            {
+                int randNum = rand.Next(0, this.randomizedWords.Length);
+                if (Array.Exists(randWords, element => element == this.randomizedWords[randNum]) == false)
+                {
+                    randWords[i] = randomizedWords[randNum];
+                }
+                else
+                {
+                    i--;
+                }
+                
+             }
+
+            return randWords;
         }
+
+        public void CreateMatrix(DifficultyLevel difficulty)
+        {
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine("Level: {0}", difficulty.level);
+            Console.WriteLine("Guess chances: {0}", difficulty.currentChances);
+            Console.WriteLine();
+
+            this.bWords = new string[randomizedWords.Length];
+            this.bWords = RandomizeRandomizedWords(this.bWords);
+
+            this.matrixNumbers = new string[difficulty.numberOfWords];
+            for(int i = 1; i <= difficulty.numberOfWords; i++)
+            {
+                this.matrixNumbers[i - 1] = Convert.ToString(i);
+            }
+
+            
+        }
+
+
+        public void GameCourse()
+        {
+            Console.Write(" ");
+            for (int i = 0; i < this.matrixNumbers.Length; i++)
+            {
+                Console.Write(" " + this.matrixNumbers[i]);
+            }
+
+            Console.WriteLine();
+            Console.Write("A");
+
+            for (int i = 0; i < this.randomizedWords.Length; i++)
+            {
+                Console.Write(" " + "X");
+            }
+
+            Console.WriteLine();
+            Console.Write("B");
+
+            for (int i = 0; i < this.bWords.Length; i++)
+            {
+                Console.Write(" " + "X");
+            }
+        }
+
+        /*
+        for(int i = 0; i < this.matrixNumbers.Length; i++)
+            {
+                Console.Write(" " + this.matrixNumbers[i]);
+            }
+
+            Console.WriteLine();
+            Console.Write("A");
+
+            for(int i = 0; i < this.randomizedWords.Length; i++)
+            {
+                Console.Write(" " + this.randomizedWords[i]);
+            }
+
+            Console.WriteLine();
+            Console.Write("B");
+
+            for (int i = 0; i < this.bWords.Length; i++)
+            {
+                Console.Write(" " + this.bWords[i]);
+            } 
+        */
 
 
 
