@@ -8,13 +8,17 @@ namespace MemoryGame
         static void Main(string[] args)
         {
             GameMechanics gm = new GameMechanics();
+            DifficultyLevel dl = new DifficultyLevel();
+
+            dl.numberOfWords = 4;
+            dl.chances = 10;
 
             string filePath = "../../../Words.txt";
 
             gm.SaveWords(filePath);
             //gm.ChooseDifficulty();
-            gm.numberOfWords = 4;
-            gm.RandomizeXWords(gm.numberOfWords);
+            
+            gm.RandomizeXWords(dl);
             gm.ShowWords();
 
         }

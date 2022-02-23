@@ -11,8 +11,7 @@ namespace MemoryGame
 
         private string[] randomizedWords { get; set; }
         private string[] words { get; set; }
-        public int numberOfWords { get; set; }
-        public int chances { get; set; }
+        
         public void SaveWords(string filePath)
         {
             this.words = System.IO.File.ReadAllLines(@filePath);
@@ -26,13 +25,13 @@ namespace MemoryGame
             }
         }
 
-        public void RandomizeXWords(int number)
+        public void RandomizeXWords(DifficultyLevel difficulty)
         {
             int randNum;
-            this.randomizedWords = new string[number];
+            this.randomizedWords = new string[difficulty.numberOfWords];
             Random rand = new Random();
 
-            for (int i = 0; i < number; i++)
+            for (int i = 0; i < difficulty.numberOfWords; i++)
             {
                 randNum = rand.Next(0, this.words.Length);
                 
@@ -48,8 +47,9 @@ namespace MemoryGame
             }
         }
 
-        public void ChooseDifficulty()
+        public DifficultyLevel ChooseDifficulty()
         {
+            DifficultyLevel difficulty = new DifficultyLevel();
             Console.WriteLine("Choose difficulty:");
             Console.WriteLine("1. Easy");
             Console.WriteLine("2. Hard");
@@ -72,16 +72,17 @@ namespace MemoryGame
             switch (answer)
             {
                 case 1:
-                    this.numberOfWords = 4;
-                    this.chances = 10;
+                    difficulty.numberOfWords = 4;
+                    difficulty.chances = 10;
                     break;
                 case 2:
-                    this.numberOfWords = 8;
-                    this.chances = 15;
+                    difficulty.numberOfWords = 8;
+                    difficulty.chances = 15;
                     break;
 
             }
 
+            return difficulty;
         }
 
         public void GenerateMatrix()
