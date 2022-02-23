@@ -11,10 +11,9 @@ namespace MemoryGame
 
         private string[] randomizedWords { get; set; }
         private string[] words { get; set; }
-        private string[] bWords { get; set; }
+        private string[,] matrixWords { get; set; }
         private string[] matrixNumbers { get; set; }
-        private string[] xMatrixA { get; set; }
-        private string[] xMatrixB { get; set; }
+        private string[,] xMatrix { get; set; }
         public void SaveWords(string filePath)
         {
             this.words = System.IO.File.ReadAllLines(@filePath);
@@ -91,23 +90,33 @@ namespace MemoryGame
             return difficulty;
         }
 
-        public string[] RandomizeRandomizedWords(string[] randWords)
+        public string[,] RandomizeRandomizedWords(string[,] randWords)
         {
             Random rand = new Random();
+            List<string> rWordsToEmpty = new List<string>();
 
-            for(int i = 0; i < this.randomizedWords.Length; i++)
+            foreach(string word in this.randomizedWords)
+            {
+                rWordsToEmpty.Add(word);
+            }
+
+            for (int i = 0; i < this.randomizedWords.Length; i++)
+            {
+                randWords[0, i] = this.randomizedWords[i];
+            }
+
+            for (int i = 0; i < this.randomizedWords.Length; i++)
             {
                 int randNum = rand.Next(0, this.randomizedWords.Length);
-                if (Array.Exists(randWords, element => element == this.randomizedWords[randNum]) == false)
+                while (rWordsToEmpty.Contains(this.randomizedWords[randNum]) == false)
                 {
-                    randWords[i] = randomizedWords[randNum];
+                    randNum = rand.Next(0, this.randomizedWords.Length);
+                               
                 }
-                else
-                {
-                    i--;
-                }
+                randWords[1, i] = this.randomizedWords[randNum];
+                rWordsToEmpty.Remove(this.randomizedWords[randNum]);
                 
-             }
+            }
 
             return randWords;
         }
@@ -119,26 +128,25 @@ namespace MemoryGame
             Console.WriteLine("Guess chances: {0}", difficulty.currentChances);
             Console.WriteLine();
 
-            this.bWords = new string[randomizedWords.Length];
-            this.xMatrixA = new string[randomizedWords.Length];
-            this.xMatrixB = new string[randomizedWords.Length];
-            this.bWords = RandomizeRandomizedWords(this.bWords);
+            this.matrixWords = new string[2, this.randomizedWords.Length];
+            this.xMatrix = new string[2,this.randomizedWords.Length];
             
-            for(int i = 0; i < this.xMatrixA.Length; i++)
+            this.matrixWords = RandomizeRandomizedWords(this.matrixWords);
+            
+            
+            for(int i = 0; i < this.xMatrix.GetLength(1); i++)
             {
-                this.xMatrixA[i] = "X";
+                this.xMatrix[0,i] = "X";
+                this.xMatrix[1, i] = "X";
             }
 
-            for (int i = 0; i < this.xMatrixB.Length; i++)
-            {
-                this.xMatrixB[i] = "X";
-            }
 
             this.matrixNumbers = new string[difficulty.numberOfWords];
             for(int i = 1; i <= difficulty.numberOfWords; i++)
             {
                 this.matrixNumbers[i - 1] = Convert.ToString(i);
             }
+            
 
             
         }
@@ -156,15 +164,15 @@ namespace MemoryGame
 
             for (int i = 0; i < this.randomizedWords.Length; i++)
             {
-                Console.Write(" " + xMatrixA[i]);
+                Console.Write(" " + this.xMatrix[0,i]);
             }
 
             Console.WriteLine();
             Console.Write("B");
 
-            for (int i = 0; i < this.bWords.Length; i++)
+            for (int i = 0; i < this.randomizedWords.Length; i++)
             {
-                Console.Write(" " + xMatrixB[i]);
+                Console.Write(" " + this.xMatrix[1,i]);
             }
             Console.WriteLine();
         }
@@ -208,8 +216,12 @@ namespace MemoryGame
             return answer;
         }
 
+       
+
         public void GameCourse()
         {
+
+    
             bool gameFinished = false;
             while (gameFinished == false) {
                 ShowInitialMatrix();
@@ -224,12 +236,14 @@ namespace MemoryGame
                 switch (answerFirst)
                 {
                     case "A":
-                        this.xMatrixA[answerSecondInt] = this.randomizedWords[answerSecondInt];
+                        this.xMatrix[0,answerSecondInt] = this.matrixWords[0, answerSecondInt];
                         break;
                     case "B":
-                        this.xMatrixB[answerSecondInt] = this.bWords[answerSecondInt];
+                        this.xMatrix[1,answerSecondInt] = this.matrixWords[1, answerSecondInt];
                         break;
                 }
+
+
                 ShowInitialMatrix();
                 answer = GetSecondPlayerCoords(answerFirst);
                 answerFirst = answer.Substring(0, 1);
@@ -241,10 +255,10 @@ namespace MemoryGame
                 switch (answerFirst)
                 {
                     case "A":
-                        this.xMatrixA[answerSecondInt] = this.randomizedWords[answerSecondInt];
+                        this.xMatrix[0, answerSecondInt] = this.matrixWords[0, answerSecondInt];
                         break;
                     case "B":
-                        this.xMatrixB[answerSecondInt] = this.bWords[answerSecondInt];
+                        this.xMatrix[1, answerSecondInt] = this.matrixWords[1, answerSecondInt];
                         break;
                 }
 
