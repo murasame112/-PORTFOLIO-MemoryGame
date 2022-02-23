@@ -14,6 +14,8 @@ namespace MemoryGame
         private string[,] matrixWords { get; set; }
         private string[] matrixNumbers { get; set; }
         private string[,] xMatrix { get; set; }
+        private int currentChances { get; set; }
+
         public void SaveWords(string filePath)
         {
             this.words = System.IO.File.ReadAllLines(@filePath);
@@ -86,7 +88,7 @@ namespace MemoryGame
                     break;
 
             }
-            difficulty.currentChances = difficulty.chances;
+            this.currentChances = difficulty.chances;
             return difficulty;
         }
 
@@ -125,7 +127,7 @@ namespace MemoryGame
         {
             Console.WriteLine("------------------------------------");
             Console.WriteLine("Level: {0}", difficulty.level);
-            Console.WriteLine("Guess chances: {0}", difficulty.currentChances);
+            Console.WriteLine("Guess chances: {0}", this.currentChances);
             Console.WriteLine();
 
             this.matrixWords = new string[2, this.randomizedWords.Length];
@@ -216,86 +218,118 @@ namespace MemoryGame
             return answer;
         }
 
+        public bool CheckForFinish(int points)
+        {
+            bool result = false; ;
+            if(points >= this.randomizedWords.Length)
+            {
+                result = true;
+                WinGame();
+            }
+            else if(this.currentChances <= 0)
+            {
+                result = true;
+                LoseGame();
+            }
+            return result;
+        }
        
 
         public void GameCourse()
         {
-
-    
+            int pointsNeeded = this.randomizedWords.Length;
+            int points = 0;
+            string firstWord = "";
+            string secondWord = "";
             bool gameFinished = false;
-            while (gameFinished == false) {
+            while (gameFinished == false)
+            {
                 ShowInitialMatrix();
+                Console.WriteLine("Current chances: {0}", this.currentChances);
 
+                
                 string answer = GetFirstPlayerCoords();
                 string answerFirst = answer.Substring(0, 1);
                 answerFirst = answerFirst.ToUpper();
                 string answerSecond = answer.Substring(1, 1);
-
+                int wordNumberA = 0;
+                int wordLetterA = 0;
+                int wordNumberB = 0;
+                int wordLetterB = 0;
                 int answerSecondInt = Convert.ToInt32(answerSecond);
                 answerSecondInt -= 1;
                 switch (answerFirst)
                 {
                     case "A":
                         this.xMatrix[0,answerSecondInt] = this.matrixWords[0, answerSecondInt];
+                        firstWord = this.xMatrix[0, answerSecondInt];
+                        wordNumberA = answerSecondInt;
+                        wordLetterA = 0;
                         break;
                     case "B":
                         this.xMatrix[1,answerSecondInt] = this.matrixWords[1, answerSecondInt];
+                        firstWord = this.xMatrix[1, answerSecondInt];
+                        wordNumberA = answerSecondInt;
+                        wordLetterA = 1;
                         break;
                 }
-
+                Console.WriteLine();
 
                 ShowInitialMatrix();
                 answer = GetSecondPlayerCoords(answerFirst);
                 answerFirst = answer.Substring(0, 1);
                 answerFirst = answerFirst.ToUpper();
                 answerSecond = answer.Substring(1, 1);
-
+                
                 answerSecondInt = Convert.ToInt32(answerSecond);
                 answerSecondInt -= 1;
                 switch (answerFirst)
                 {
                     case "A":
                         this.xMatrix[0, answerSecondInt] = this.matrixWords[0, answerSecondInt];
+                        secondWord = this.xMatrix[0, answerSecondInt];
+                        wordNumberB = answerSecondInt;
+                        wordLetterB = 0;
                         break;
                     case "B":
                         this.xMatrix[1, answerSecondInt] = this.matrixWords[1, answerSecondInt];
+                        secondWord = this.xMatrix[1, answerSecondInt];
+                        wordNumberB = answerSecondInt;
+                        wordLetterB = 1;
                         break;
                 }
 
+                Console.WriteLine("first and second word: " + firstWord + " " + secondWord);
+                if(firstWord != secondWord)
+                {
+                    this.xMatrix[wordLetterA, wordNumberA] = "X";
+                    this.xMatrix[wordLetterB, wordNumberB] = "X";
+
+                }
+                else
+                {
+                    points += 1;
+                }
+                this.currentChances -= 1;
+                Console.WriteLine();
+                Console.WriteLine("==================");
+                Console.WriteLine();
+                gameFinished = CheckForFinish(points);
 
             }
-
-
-
 
         }
 
+        public void WinGame()
+        {
+            Console.WriteLine("Congratulations, you have won!");
 
+        }
 
-        /*
-        for(int i = 0; i < this.matrixNumbers.Length; i++)
-            {
-                Console.Write(" " + this.matrixNumbers[i]);
-            }
-
-            Console.WriteLine();
-            Console.Write("A");
-
-            for(int i = 0; i < this.randomizedWords.Length; i++)
-            {
-                Console.Write(" " + this.randomizedWords[i]);
-            }
-
-            Console.WriteLine();
-            Console.Write("B");
-
-            for (int i = 0; i < this.bWords.Length; i++)
-            {
-                Console.Write(" " + this.bWords[i]);
-            } 
-        */
-
-
+        public void LoseGame()
+        {
+            Console.WriteLine("You've lost!");
+        }
 
     }
 }
