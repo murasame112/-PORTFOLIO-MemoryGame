@@ -4,9 +4,17 @@ namespace MemoryGame
 {
     class Program
     {
+
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            GameMechanics gm = new GameMechanics();
+
+            string filePath = "../../../Words.txt";
+
+            gm.SaveWords(filePath);
+
+            gm.ShowWords();
+
         }
     }
 }
