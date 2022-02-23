@@ -129,8 +129,7 @@ namespace MemoryGame
             
         }
 
-
-        public void GameCourse()
+        public void ShowInitialMatrix()
         {
             Console.Write(" ");
             for (int i = 0; i < this.matrixNumbers.Length; i++)
@@ -153,7 +152,51 @@ namespace MemoryGame
             {
                 Console.Write(" " + "X");
             }
+            Console.WriteLine();
         }
+
+        public string GetPlayerCoords()
+        {
+            string answer = "";
+            string answerFirst = "";
+            string answerSecond = "";
+
+            do
+            {
+                Console.Write("Enter your answer: ");
+                answer = Console.ReadLine();
+                answerFirst = answer.Substring(0, 1);
+                answerFirst = answerFirst.ToUpper();
+                answerSecond = answer.Substring(1, 1);
+
+            } while ((answerFirst != "A" && answerFirst != "B") || ((Array.Exists(this.matrixNumbers, element => element == answerSecond)) == false) || answer.Length > 2);
+            
+            return answer;
+
+        }
+
+        public void GameCourse()
+        {
+            ShowInitialMatrix();
+
+            string answer = GetPlayerCoords();
+            string answerFirst = answer.Substring(0, 1);
+            string answerSecond = answer.Substring(1, 1);
+            switch (answerFirst)
+            {
+                case "A":
+
+                    break;
+                case "B":
+                    break;
+            }
+
+
+
+
+        }
+
+
 
         /*
         for(int i = 0; i < this.matrixNumbers.Length; i++)
