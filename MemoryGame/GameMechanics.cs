@@ -9,9 +9,10 @@ namespace MemoryGame
     public class GameMechanics
     {
 
-        string[] randomizedWords { get; set; }
-        string[] words { get; set; }
-
+        private string[] randomizedWords { get; set; }
+        private string[] words { get; set; }
+        public int numberOfWords { get; set; }
+        public int chances { get; set; }
         public void SaveWords(string filePath)
         {
             this.words = System.IO.File.ReadAllLines(@filePath);
@@ -25,8 +26,8 @@ namespace MemoryGame
             }
         }
 
-       public void RandomizeXWords(int number)
-       {
+        public void RandomizeXWords(int number)
+        {
             int randNum;
             this.randomizedWords = new string[number];
             Random rand = new Random();
@@ -45,7 +46,48 @@ namespace MemoryGame
                     i--;
                 }
             }
-       }
+        }
+
+        public void ChooseDifficulty()
+        {
+            Console.WriteLine("Choose difficulty:");
+            Console.WriteLine("1. Easy");
+            Console.WriteLine("2. Hard");
+            int answer = 1;
+            do
+            {
+                Console.Write("Your choice: ");
+                if (answer != 1 && answer != 2) { Console.Write("(choose correct number) "); }
+                try
+                {
+                    answer = Convert.ToInt32(Console.ReadLine());
+                }
+                catch (FormatException)
+                {
+                    answer = 0;
+                }
+            } while (answer != 1 && answer != 2);
+            Console.WriteLine();
+
+            switch (answer)
+            {
+                case 1:
+                    this.numberOfWords = 4;
+                    this.chances = 10;
+                    break;
+                case 2:
+                    this.numberOfWords = 8;
+                    this.chances = 15;
+                    break;
+
+            }
+
+        }
+
+        public void GenerateMatrix()
+        {
+
+        }
 
 
 

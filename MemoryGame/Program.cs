@@ -12,7 +12,9 @@ namespace MemoryGame
             string filePath = "../../../Words.txt";
 
             gm.SaveWords(filePath);
-            gm.RandomizeXWords(4);
+            //gm.ChooseDifficulty();
+            gm.numberOfWords = 4;
+            gm.RandomizeXWords(gm.numberOfWords);
             gm.ShowWords();
 
         }
