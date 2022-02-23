@@ -13,6 +13,8 @@ namespace MemoryGame
         private string[] words { get; set; }
         private string[] bWords { get; set; }
         private string[] matrixNumbers { get; set; }
+        private string[] xMatrixA { get; set; }
+        private string[] xMatrixB { get; set; }
         public void SaveWords(string filePath)
         {
             this.words = System.IO.File.ReadAllLines(@filePath);
@@ -118,7 +120,19 @@ namespace MemoryGame
             Console.WriteLine();
 
             this.bWords = new string[randomizedWords.Length];
+            this.xMatrixA = new string[randomizedWords.Length];
+            this.xMatrixB = new string[randomizedWords.Length];
             this.bWords = RandomizeRandomizedWords(this.bWords);
+            
+            for(int i = 0; i < this.xMatrixA.Length; i++)
+            {
+                this.xMatrixA[i] = "X";
+            }
+
+            for (int i = 0; i < this.xMatrixB.Length; i++)
+            {
+                this.xMatrixB[i] = "X";
+            }
 
             this.matrixNumbers = new string[difficulty.numberOfWords];
             for(int i = 1; i <= difficulty.numberOfWords; i++)
@@ -142,7 +156,7 @@ namespace MemoryGame
 
             for (int i = 0; i < this.randomizedWords.Length; i++)
             {
-                Console.Write(" " + "X");
+                Console.Write(" " + xMatrixA[i]);
             }
 
             Console.WriteLine();
@@ -150,12 +164,12 @@ namespace MemoryGame
 
             for (int i = 0; i < this.bWords.Length; i++)
             {
-                Console.Write(" " + "X");
+                Console.Write(" " + xMatrixB[i]);
             }
             Console.WriteLine();
         }
 
-        public string GetPlayerCoords()
+        public string GetFirstPlayerCoords()
         {
             string answer = "";
             string answerFirst = "";
@@ -175,20 +189,66 @@ namespace MemoryGame
 
         }
 
+        public string GetSecondPlayerCoords(string prev)
+        {
+            string answer = "";
+            string answerFirst = "";
+            string answerSecond = "";
+
+            do
+            {
+                Console.Write("Enter your answer: ");
+                answer = Console.ReadLine();
+                answerFirst = answer.Substring(0, 1);
+                answerFirst = answerFirst.ToUpper();
+                answerSecond = answer.Substring(1, 1);
+
+            } while ((answerFirst != "A" && answerFirst != "B") || ((Array.Exists(this.matrixNumbers, element => element == answerSecond)) == false) || (answer.Length > 2) || (answerFirst == prev));
+
+            return answer;
+        }
+
         public void GameCourse()
         {
-            ShowInitialMatrix();
+            bool gameFinished = false;
+            while (gameFinished == false) {
+                ShowInitialMatrix();
 
-            string answer = GetPlayerCoords();
-            string answerFirst = answer.Substring(0, 1);
-            string answerSecond = answer.Substring(1, 1);
-            switch (answerFirst)
-            {
-                case "A":
+                string answer = GetFirstPlayerCoords();
+                string answerFirst = answer.Substring(0, 1);
+                answerFirst = answerFirst.ToUpper();
+                string answerSecond = answer.Substring(1, 1);
 
-                    break;
-                case "B":
-                    break;
+                int answerSecondInt = Convert.ToInt32(answerSecond);
+                answerSecondInt -= 1;
+                switch (answerFirst)
+                {
+                    case "A":
+                        this.xMatrixA[answerSecondInt] = this.randomizedWords[answerSecondInt];
+                        break;
+                    case "B":
+                        this.xMatrixB[answerSecondInt] = this.bWords[answerSecondInt];
+                        break;
+                }
+                ShowInitialMatrix();
+                answer = GetSecondPlayerCoords(answerFirst);
+                answerFirst = answer.Substring(0, 1);
+                answerFirst = answerFirst.ToUpper();
+                answerSecond = answer.Substring(1, 1);
+
+                answerSecondInt = Convert.ToInt32(answerSecond);
+                answerSecondInt -= 1;
+                switch (answerFirst)
+                {
+                    case "A":
+                        this.xMatrixA[answerSecondInt] = this.randomizedWords[answerSecondInt];
+                        break;
+                    case "B":
+                        this.xMatrixB[answerSecondInt] = this.bWords[answerSecondInt];
+                        break;
+                }
+
+
             }
 
 
