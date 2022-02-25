@@ -379,12 +379,19 @@ namespace MemoryGame
         public void WinGame()
         {
             Console.WriteLine("Congratulations, you have won!");
+            Console.WriteLine();
 
         }
 
         public void LoseGame()
         {
             Console.WriteLine("You've lost!");
+            Console.WriteLine();
+        }
+
+        public void ResultReport(DifficultyLevel difficulty, int time)
+        {
+            Console.WriteLine("You used {0} of your chances and it took you {1} seconds to win!", difficulty.chances - this.currentChances, time);
         }
 
     }

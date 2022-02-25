@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace MemoryGame
 {
@@ -15,17 +16,23 @@ namespace MemoryGame
             string filePath = "../../../Words.txt";
 
             gm.SaveWords(filePath);
-
+            Stopwatch sw;
             bool gameRestart = true;
-
             while (gameRestart == true)
             {
+                
+                sw = Stopwatch.StartNew();
                 dl = gm.ChooseDifficulty();
                 gm.RandomizeXWords(dl);
                 gm.ShowWords();
                 gm.CreateMatrix(dl);
                 gm.GameCourse();
-                gameRestart = gm.AskForRestart();
+                sw.Stop();
+                double timeD = sw.Elapsed.TotalSeconds;
+                int time = Convert.ToInt32(timeD);
+                gm.ResultReport(dl, time);
+                
+                gameRestart = gm.AskForRestart();              
             }
 
         }
