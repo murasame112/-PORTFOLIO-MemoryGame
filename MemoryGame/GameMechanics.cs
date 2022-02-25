@@ -189,11 +189,14 @@ namespace MemoryGame
             {
                 Console.Write("Enter your answer: ");
                 answer = Console.ReadLine();
-                answerFirst = answer.Substring(0, 1);
-                answerFirst = answerFirst.ToUpper();
-                answerSecond = answer.Substring(1, 1);
+                if (answer.Length == 2)
+                {
+                    answerFirst = answer.Substring(0, 1);
+                    answerFirst = answerFirst.ToUpper();
+                    answerSecond = answer.Substring(1, 1);
+                }
 
-            } while ((answerFirst != "A" && answerFirst != "B") || ((Array.Exists(this.matrixNumbers, element => element == answerSecond)) == false) || answer.Length > 2);
+            } while ((answerFirst != "A" && answerFirst != "B") || ((Array.Exists(this.matrixNumbers, element => element == answerSecond)) == false) || (answer.Length != 2));
             
             return answer;
 
@@ -234,6 +237,43 @@ namespace MemoryGame
             return result;
         }
        
+
+        public bool AskForRestart()
+        {
+            bool result = false;
+            Console.WriteLine("Do you want to restart the game?");
+            Console.WriteLine("1. Yes");
+            Console.WriteLine("2. No");
+
+            int answer = 1;
+            do
+            {
+                Console.Write("Your choice: ");
+                if (answer != 1 && answer != 2) { Console.Write("(choose correct number) "); }
+                try
+                {
+                    answer = Convert.ToInt32(Console.ReadLine());
+                }
+                catch (FormatException)
+                {
+                    answer = 0;
+                }
+            } while (answer != 1 && answer != 2);
+            Console.WriteLine();
+
+            switch (answer)
+            {
+                case 1:
+                    result = true;
+                    break;
+                case 2:
+                    result = false;
+                    break;
+            }
+
+            return result;
+
+        }
 
         public void GameCourse()
         {
@@ -283,15 +323,19 @@ namespace MemoryGame
                 
                 answerSecondInt = Convert.ToInt32(answerSecond);
                 answerSecondInt -= 1;
+                bool wordAIsX = true;
+                bool wordBIsX = true;
                 switch (answerFirst)
                 {
                     case "A":
+                        if(this.xMatrix[0, answerSecondInt] == "X") { wordAIsX = false; }
                         this.xMatrix[0, answerSecondInt] = this.matrixWords[0, answerSecondInt];
                         secondWord = this.xMatrix[0, answerSecondInt];
                         wordNumberB = answerSecondInt;
                         wordLetterB = 0;
                         break;
                     case "B":
+                        if (this.xMatrix[1, answerSecondInt] == "X") { wordBIsX = false; }
                         this.xMatrix[1, answerSecondInt] = this.matrixWords[1, answerSecondInt];
                         secondWord = this.xMatrix[1, answerSecondInt];
                         wordNumberB = answerSecondInt;
@@ -302,8 +346,14 @@ namespace MemoryGame
                 Console.WriteLine("first and second word: " + firstWord + " " + secondWord);
                 if(firstWord != secondWord)
                 {
-                    this.xMatrix[wordLetterA, wordNumberA] = "X";
-                    this.xMatrix[wordLetterB, wordNumberB] = "X";
+                    if (wordAIsX == true)
+                    {
+                        this.xMatrix[wordLetterA, wordNumberA] = "X";
+                    }
+                    if (wordBIsX == true)
+                    {
+                        this.xMatrix[wordLetterB, wordNumberB] = "X";
+                    }
 
                 }
                 else
@@ -315,7 +365,7 @@ namespace MemoryGame
                 Console.WriteLine("==================");
                 Console.WriteLine();
                 gameFinished = CheckForFinish(points);
-
+                
             }
 
         }

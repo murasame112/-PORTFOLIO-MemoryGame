@@ -15,12 +15,19 @@ namespace MemoryGame
             string filePath = "../../../Words.txt";
 
             gm.SaveWords(filePath);
-            dl = gm.ChooseDifficulty();
-            
-            gm.RandomizeXWords(dl);
-            gm.ShowWords();
-            gm.CreateMatrix(dl);
-            gm.GameCourse();
+
+            bool gameRestart = true;
+
+            while (gameRestart == true)
+            {
+                dl = gm.ChooseDifficulty();
+                gm.RandomizeXWords(dl);
+                gm.ShowWords();
+                gm.CreateMatrix(dl);
+                gm.GameCourse();
+                gameRestart = gm.AskForRestart();
+            }
+
         }
     }
 }
