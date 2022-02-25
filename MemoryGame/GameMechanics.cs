@@ -212,9 +212,12 @@ namespace MemoryGame
             {
                 Console.Write("Enter your answer: ");
                 answer = Console.ReadLine();
-                answerFirst = answer.Substring(0, 1);
-                answerFirst = answerFirst.ToUpper();
-                answerSecond = answer.Substring(1, 1);
+                if (answer.Length == 2)
+                {
+                    answerFirst = answer.Substring(0, 1);
+                    answerFirst = answerFirst.ToUpper();
+                    answerSecond = answer.Substring(1, 1);
+                }
 
             } while ((answerFirst != "A" && answerFirst != "B") || ((Array.Exists(this.matrixNumbers, element => element == answerSecond)) == false) || (answer.Length > 2) || (answerFirst == prev));
 
@@ -296,17 +299,21 @@ namespace MemoryGame
                 int wordLetterA = 0;
                 int wordNumberB = 0;
                 int wordLetterB = 0;
+                bool wordAIsX = false;
+                bool wordBIsX = false;
                 int answerSecondInt = Convert.ToInt32(answerSecond);
                 answerSecondInt -= 1;
                 switch (answerFirst)
                 {
                     case "A":
+                        if (this.xMatrix[0, answerSecondInt] == "X") { wordAIsX = true; }
                         this.xMatrix[0,answerSecondInt] = this.matrixWords[0, answerSecondInt];
                         firstWord = this.xMatrix[0, answerSecondInt];
                         wordNumberA = answerSecondInt;
                         wordLetterA = 0;
                         break;
                     case "B":
+                        if (this.xMatrix[1, answerSecondInt] == "X") { wordBIsX = true; }
                         this.xMatrix[1,answerSecondInt] = this.matrixWords[1, answerSecondInt];
                         firstWord = this.xMatrix[1, answerSecondInt];
                         wordNumberA = answerSecondInt;
@@ -323,19 +330,18 @@ namespace MemoryGame
                 
                 answerSecondInt = Convert.ToInt32(answerSecond);
                 answerSecondInt -= 1;
-                bool wordAIsX = true;
-                bool wordBIsX = true;
+                
                 switch (answerFirst)
                 {
                     case "A":
-                        if(this.xMatrix[0, answerSecondInt] == "X") { wordAIsX = false; }
+                        if(this.xMatrix[0, answerSecondInt] == "X") { wordAIsX = true; }
                         this.xMatrix[0, answerSecondInt] = this.matrixWords[0, answerSecondInt];
                         secondWord = this.xMatrix[0, answerSecondInt];
                         wordNumberB = answerSecondInt;
                         wordLetterB = 0;
                         break;
                     case "B":
-                        if (this.xMatrix[1, answerSecondInt] == "X") { wordBIsX = false; }
+                        if (this.xMatrix[1, answerSecondInt] == "X") { wordBIsX = true; }
                         this.xMatrix[1, answerSecondInt] = this.matrixWords[1, answerSecondInt];
                         secondWord = this.xMatrix[1, answerSecondInt];
                         wordNumberB = answerSecondInt;
