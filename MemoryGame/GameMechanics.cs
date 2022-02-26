@@ -363,7 +363,7 @@ namespace MemoryGame
                     }
 
                 }
-                else
+                else if(wordAIsX == true && wordBIsX == true)
                 {
                     points += 1;
                 }
