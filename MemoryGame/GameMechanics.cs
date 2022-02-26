@@ -15,6 +15,8 @@ namespace MemoryGame
         private string[,] matrixWords { get; set; }
         private string[] matrixNumbers { get; set; }
         private string[,] xMatrix { get; set; }
+        private string[] highscores { get; set; }
+        private string[] scores { get; set; }
         private int currentChances { get; set; }
         public bool gameWon { get; set; }
         public void SaveWords(string filePath)
@@ -227,6 +229,7 @@ namespace MemoryGame
 
         public bool CheckForFinish(int points)
         {
+            
             bool result = false; ;
             if(points >= this.randomizedWords.Length)
             {
@@ -322,7 +325,7 @@ namespace MemoryGame
                         break;
                 }
                 Console.WriteLine();
-
+                Console.Clear();
                 ShowInitialMatrix();
                 answer = GetSecondPlayerCoords(answerFirst);
                 answerFirst = answer.Substring(0, 1);
@@ -349,7 +352,7 @@ namespace MemoryGame
                         wordLetterB = 1;
                         break;
                 }
-
+                Console.Clear();
                 Console.WriteLine("first and second word: " + firstWord + " " + secondWord);
                 if(firstWord != secondWord)
                 {
@@ -404,15 +407,58 @@ namespace MemoryGame
         {
             DateTime localDate = DateTime.Now.Date;
             //name| date | guessing_time | guessing_tries | difficulty
-            Console.Write("Your name: ");
-            string result = Console.ReadLine();
-            
+            string name = "";
+            do {
+                Console.Write("Your name: ");
+                name = Console.ReadLine();
+            } while ((name.Length < 1) || (name.Contains('|')));
+
+            string result = name;
             result += " | " + DateTime.Now.ToString("dd/mm/yyyy");
             result += " | " + time;
             result += " | " + Convert.ToString(difficulty.chances - this.currentChances);
             result += " | " + difficulty.level;
-            result += Environment.NewLine;
-            File.AppendAllText("../../../Scores.txt", result);
+            File.AppendAllText("../../../Scores.txt", result + Environment.NewLine);
+        }
+
+        public void DisplayHighscores()
+        {
+            
+            this.scores = File.ReadAllLines(@"../../../Scores.txt");
+            this.highscores = new string[scores.Length];
+            int i = 0;
+            string chances;
+            int index;
+            foreach(string scorePoint in scores)
+            {
+                chances = scorePoint;
+                for (int j = 0; j < 3; j++)
+                {
+                    index = chances.IndexOf("|");
+                    chances = chances.Substring(index + 2);
+                }
+                index = chances.IndexOf("|");
+                this.highscores[i] = chances.Substring(0, index);
+                
+                i++;
+            }
+
+            
+            Array.Sort(highscores);
+            
+
+
+
+            Console.WriteLine("Highscores: ");
+            int highscoreCount = 10;
+            if(this.scores.Length < 10) { highscoreCount = this.scores.Length; }
+            for(int k = 0; k < highscoreCount; k++)
+            {
+                
+                
+
+                Console.WriteLine("{0}: chances used: {1}", k+1, this.highscores[k]);
+            }
         }
 
     }

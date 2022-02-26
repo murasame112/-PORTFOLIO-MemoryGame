@@ -23,6 +23,7 @@ namespace MemoryGame
                 
                 sw = Stopwatch.StartNew();
                 dl = gm.ChooseDifficulty();
+                Console.Clear();
                 gm.RandomizeXWords(dl);
                 gm.ShowWords();
                 gm.CreateMatrix(dl);
@@ -34,6 +35,7 @@ namespace MemoryGame
                     gm.ResultReport(dl, time);
                     gm.SaveScore(dl, time); 
                 }
+                gm.DisplayHighscores();
                 gameRestart = gm.AskForRestart();              
             }
 
