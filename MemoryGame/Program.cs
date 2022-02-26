@@ -11,13 +11,13 @@ namespace MemoryGame
             GameMechanics gm = new GameMechanics();
             DifficultyLevel dl = new DifficultyLevel();
 
-            
-
             string filePath = "../../../Words.txt";
-            
             gm.SaveWords(filePath);
             Stopwatch sw;
             bool gameRestart = true;
+
+
+
             while (gameRestart == true)
             {
                 

@@ -19,6 +19,9 @@ namespace MemoryGame
         private string[] scores { get; set; }
         private int currentChances { get; set; }
         public bool gameWon { get; set; }
+       
+        
+        
         public void SaveWords(string filePath)
         {
             this.words = File.ReadAllLines(@filePath);
@@ -29,28 +32,6 @@ namespace MemoryGame
             foreach(string word in this.randomizedWords)
             {
                 Console.WriteLine(word);
-            }
-        }
-
-        public void RandomizeXWords(DifficultyLevel difficulty)
-        {
-            int randNum;
-            this.randomizedWords = new string[difficulty.numberOfWords];
-            Random rand = new Random();
-
-            for (int i = 0; i < difficulty.numberOfWords; i++)
-            {
-                randNum = rand.Next(0, this.words.Length);
-                
-                //Checks if word has been already chosen
-                if (Array.Exists(this.randomizedWords, element => element == this.words[randNum]) == false)
-                {
-                    this.randomizedWords[i] = this.words[randNum];
-                }
-                else
-                {
-                    i--;
-                }
             }
         }
 
@@ -82,7 +63,7 @@ namespace MemoryGame
                     difficulty.numberOfWords = 4;
                     difficulty.chances = 10;
                     difficulty.level = "Easy";
-                    
+
                     break;
                 case 2:
                     difficulty.numberOfWords = 8;
@@ -93,6 +74,28 @@ namespace MemoryGame
             }
             this.currentChances = difficulty.chances;
             return difficulty;
+        }
+
+        public void RandomizeXWords(DifficultyLevel difficulty)
+        {
+            int randNum;
+            this.randomizedWords = new string[difficulty.numberOfWords];
+            Random rand = new Random();
+
+            for (int i = 0; i < difficulty.numberOfWords; i++)
+            {
+                randNum = rand.Next(0, this.words.Length);
+                
+                //Checks if word has been already chosen
+                if (Array.Exists(this.randomizedWords, element => element == this.words[randNum]) == false)
+                {
+                    this.randomizedWords[i] = this.words[randNum];
+                }
+                else
+                {
+                    i--;
+                }
+            }
         }
 
         public string[,] RandomizeRandomizedWords(string[,] randWords)
@@ -151,9 +154,7 @@ namespace MemoryGame
             {
                 this.matrixNumbers[i - 1] = Convert.ToString(i);
             }
-            
 
-            
         }
 
         public void ShowInitialMatrix()
@@ -227,60 +228,10 @@ namespace MemoryGame
             return answer;
         }
 
-        public bool CheckForFinish(int points)
-        {
-            
-            bool result = false; ;
-            if(points >= this.randomizedWords.Length)
-            {
-                result = true;
-                WinGame();
-            }
-            else if(this.currentChances <= 0)
-            {
-                result = true;
-                LoseGame();
-            }
-            return result;
-        }
+        
        
 
-        public bool AskForRestart()
-        {
-            bool result = false;
-            Console.WriteLine("Do you want to restart the game?");
-            Console.WriteLine("1. Yes");
-            Console.WriteLine("2. No");
-
-            int answer = 1;
-            do
-            {
-                Console.Write("Your choice: ");
-                if (answer != 1 && answer != 2) { Console.Write("(choose correct number) "); }
-                try
-                {
-                    answer = Convert.ToInt32(Console.ReadLine());
-                }
-                catch (FormatException)
-                {
-                    answer = 0;
-                }
-            } while (answer != 1 && answer != 2);
-            Console.WriteLine();
-
-            switch (answer)
-            {
-                case 1:
-                    result = true;
-                    break;
-                case 2:
-                    result = false;
-                    break;
-            }
-
-            return result;
-
-        }
+        
 
         public void GameCourse()
         {
@@ -382,6 +333,60 @@ namespace MemoryGame
 
         }
 
+        public bool CheckForFinish(int points)
+        {
+
+            bool result = false; ;
+            if (points >= this.randomizedWords.Length)
+            {
+                result = true;
+                WinGame();
+            }
+            else if (this.currentChances <= 0)
+            {
+                result = true;
+                LoseGame();
+            }
+            return result;
+        }
+
+        public bool AskForRestart()
+        {
+            bool result = false;
+            Console.WriteLine("Do you want to restart the game?");
+            Console.WriteLine("1. Yes");
+            Console.WriteLine("2. No");
+
+            int answer = 1;
+            do
+            {
+                Console.Write("Your choice: ");
+                if (answer != 1 && answer != 2) { Console.Write("(choose correct number) "); }
+                try
+                {
+                    answer = Convert.ToInt32(Console.ReadLine());
+                }
+                catch (FormatException)
+                {
+                    answer = 0;
+                }
+            } while (answer != 1 && answer != 2);
+            Console.WriteLine();
+
+            switch (answer)
+            {
+                case 1:
+                    result = true;
+                    break;
+                case 2:
+                    result = false;
+                    break;
+            }
+
+            return result;
+
+        }
+
         public void WinGame()
         {
             Console.WriteLine("Congratulations, you have won!");
@@ -443,11 +448,7 @@ namespace MemoryGame
                 i++;
             }
 
-            
             Array.Sort(highscores);
-            
-
-
 
             Console.WriteLine("Highscores: ");
             int highscoreCount = 10;
@@ -455,8 +456,6 @@ namespace MemoryGame
             for(int k = 0; k < highscoreCount; k++)
             {
                 
-                
-
                 Console.WriteLine("{0}: chances used: {1}", k+1, this.highscores[k]);
             }
         }
