@@ -239,6 +239,7 @@ namespace MemoryGame
             int points = 0;
             string firstWord = "";
             string secondWord = "";
+            int wordLengthForNumMatrix = 0;
             bool gameFinished = false;
             while (gameFinished == false)
             {
@@ -266,6 +267,7 @@ namespace MemoryGame
                         firstWord = this.xMatrix[0, answerSecondInt];
                         wordNumberA = answerSecondInt;
                         wordLetterA = 0;
+                        wordLengthForNumMatrix = this.matrixWords[0, answerSecondInt].Length;
                         break;
                     case "B":
                         if (this.xMatrix[1, answerSecondInt] == "X") { wordBIsX = true; }
@@ -273,11 +275,19 @@ namespace MemoryGame
                         firstWord = this.xMatrix[1, answerSecondInt];
                         wordNumberA = answerSecondInt;
                         wordLetterA = 1;
+                        wordLengthForNumMatrix = this.matrixWords[1, answerSecondInt].Length;
                         break;
                 }
+                wordLengthForNumMatrix -= 1;
+                for (int i = 0; i < wordLengthForNumMatrix; i++)
+                {
+                    this.matrixNumbers[answerSecondInt] += " ";
+                }
+
                 Console.WriteLine();
                 Console.Clear();
                 ShowInitialMatrix();
+                this.matrixNumbers[answerSecondInt] = this.matrixNumbers[answerSecondInt].Substring(0, 1);
                 answer = GetSecondPlayerCoords(answerFirst);
                 answerFirst = answer.Substring(0, 1);
                 answerFirst = answerFirst.ToUpper();
@@ -326,6 +336,8 @@ namespace MemoryGame
                 Console.WriteLine("==================");
                 Console.WriteLine();
                 gameFinished = CheckForFinish(points);
+
+                
                 
             }
 
