@@ -14,7 +14,7 @@ namespace MemoryGame
             
 
             string filePath = "../../../Words.txt";
-
+            
             gm.SaveWords(filePath);
             Stopwatch sw;
             bool gameRestart = true;
@@ -29,9 +29,11 @@ namespace MemoryGame
                 gm.GameCourse();
                 sw.Stop();
                 double timeD = sw.Elapsed.TotalSeconds;
-                int time = Convert.ToInt32(timeD);
-                gm.ResultReport(dl, time);
-                
+                int time = Convert.ToInt32(timeD);                
+                if (gm.gameWon == true) {
+                    gm.ResultReport(dl, time);
+                    gm.SaveScore(dl, time); 
+                }
                 gameRestart = gm.AskForRestart();              
             }
 

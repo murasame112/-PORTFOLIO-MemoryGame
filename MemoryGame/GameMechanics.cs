@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace MemoryGame
 {
@@ -15,10 +16,10 @@ namespace MemoryGame
         private string[] matrixNumbers { get; set; }
         private string[,] xMatrix { get; set; }
         private int currentChances { get; set; }
-
+        public bool gameWon { get; set; }
         public void SaveWords(string filePath)
         {
-            this.words = System.IO.File.ReadAllLines(@filePath);
+            this.words = File.ReadAllLines(@filePath);
         }
 
         public void ShowWords()
@@ -374,12 +375,16 @@ namespace MemoryGame
                 
             }
 
+            
+
         }
 
         public void WinGame()
         {
             Console.WriteLine("Congratulations, you have won!");
             Console.WriteLine();
+            this.gameWon = true;
+            
 
         }
 
@@ -387,11 +392,27 @@ namespace MemoryGame
         {
             Console.WriteLine("You've lost!");
             Console.WriteLine();
+            this.gameWon = false;
         }
 
         public void ResultReport(DifficultyLevel difficulty, int time)
         {
             Console.WriteLine("You used {0} of your chances and it took you {1} seconds to win!", difficulty.chances - this.currentChances, time);
+        }
+
+        public void SaveScore(DifficultyLevel difficulty, int time)
+        {
+            DateTime localDate = DateTime.Now.Date;
+            //name| date | guessing_time | guessing_tries | difficulty
+            Console.Write("Your name: ");
+            string result = Console.ReadLine();
+            
+            result += " | " + DateTime.Now.ToString("dd/mm/yyyy");
+            result += " | " + time;
+            result += " | " + Convert.ToString(difficulty.chances - this.currentChances);
+            result += " | " + difficulty.level;
+            result += Environment.NewLine;
+            File.AppendAllText("../../../Scores.txt", result);
         }
 
     }
